@@ -4,6 +4,9 @@ export class LoginPage {
         this.usernameInput = page.locator('[data-test="username"]');
         this.passwordInput = page.locator('[data-test="password"]');
         this.loginButton = page.locator('[data-test="login-button"]');
+        this.errorMessage = page.locator('[data-test="error"]');
+        this.usenameXicon = page.locator('path').first();
+        this.passwordXicon = page.locator('path').nth(1);
     }
     async navigate() {
         await this.page.goto('https://www.saucedemo.com/');

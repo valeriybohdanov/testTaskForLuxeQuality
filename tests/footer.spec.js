@@ -3,7 +3,7 @@ import { LoginPage } from '../pages/LoginPage';
 import { InventoryPage } from '../pages/InventoryPage';
 import { credentials } from '../testData';
 
-test('Footer Links', async ({ page }) => {
+test('TC7: Footer Links', async ({ page }) => {
     const loginPage = new LoginPage(page);
     const inventoryPage = new InventoryPage(page);
     await loginPage.navigate();
@@ -33,4 +33,4 @@ test('Footer Links', async ({ page }) => {
     await expect(linkedinPage).toHaveURL('https://www.linkedin.com/company/sauce-labs/');
     await linkedinPage.close();
 });
-    
+
