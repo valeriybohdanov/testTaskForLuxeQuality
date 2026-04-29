@@ -1,4 +1,4 @@
-import { expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 export class InventoryPage {
     constructor(page) {
         this.page = page;
@@ -10,23 +10,39 @@ export class InventoryPage {
         this.addButton = page.locator('.btn.btn_primary.btn_small.btn_inventory ')
         this.cartLink = page.locator('[data-test="shopping-cart-link"]')
         this.sortDropdown = page.locator('.product_sort_container');
+        this.url = 'https://www.saucedemo.com/inventory.html';
+
 
     }
     async navigate() {
-        await this.page.goto('https://www.saucedemo.com/inventory.html');
+      await test.step('Navigate to Inventory page', async() => {  
+        await this.page.goto(this.url);
+      });
+    }
+    async assertUrl() {
+      await test.step('Verify URL is correct', async() => {
+        await expect(this.page).toHaveURL(this.url);
+      });
     }
     async addToCartFirstItem() {
-        await this.addButton.first().click();     
+      await test.step('Add first item from products list to cart', async() => {
+        await this.addButton.first().click();
+      });
     }
     async getFirstItemName() {
+      return await test.step('Get name of the first item from products list', async() => {
         return await this.page.locator('.inventory_item_name').first().textContent();
+      });
     } 
     async getFirstItemPrice() {
+      return await test.step('Get price of the first item from products list', async() => {
         return await this.page.locator('.inventory_item_price').first().textContent();
-    } 
+      });
+    }  
     async sortBy(option) {
+      await test.step(`Verify Dropdown is visible andSort products by ${option} option`, async() => {
         await expect(this.sortDropdown).toBeVisible();
         await this.sortDropdown.selectOption(option);
-
-    } 
+      });
+    };
   }    

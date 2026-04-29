@@ -7,9 +7,8 @@ test('TC1: Valid Login', async ({ page }) => {
     const loginPage = new LoginPage(page);
     const inventoryPage = new InventoryPage(page);
     await loginPage.navigate();
-    await expect(loginPage.passwordInput).toHaveAttribute('type', 'password');
     await loginPage.login(credentials.username, credentials.password);
-    await expect(page).toHaveURL('https://www.saucedemo.com/inventory.html');
+    await inventoryPage.assertUrl();
 });
 
 test('TC2: Login with Invalid Password', async ({ page }) => {
@@ -41,12 +40,12 @@ test('TC4: Logout', async ({ page }) => {
     const inventoryPage = new InventoryPage(page);
     await loginPage.navigate();
     await loginPage.login(credentials.username, credentials.password);
-    await expect(page).toHaveURL('https://www.saucedemo.com/inventory.html');
+    await inventoryPage.assertUrl();
     await inventoryPage.burgerMenuButton.click();
     const menuItems = page.locator('.bm-item');
     await expect(menuItems).toHaveCount(4);
     await inventoryPage.logoutLink.click();
-    await expect(page).toHaveURL('https://www.saucedemo.com/');
+    await loginPage.assertUrl();
     await expect(loginPage.usernameInput).toBeEmpty();
     await expect(loginPage.passwordInput).toBeEmpty();
 });

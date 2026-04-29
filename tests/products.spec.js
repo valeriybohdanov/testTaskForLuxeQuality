@@ -8,7 +8,7 @@ test('TC6: Sorting', async ({ page }) => {
     const inventoryPage = new InventoryPage(page);
     await loginPage.navigate();
     await loginPage.login(credentials.username, credentials.password);
-    await expect(page).toHaveURL('https://www.saucedemo.com/inventory.html');
+    await inventoryPage.assertUrl();
 
     await inventoryPage.sortBy('az');
     const namesAZ = await page.locator('[data-test="inventory-item-name"]').allTextContents();

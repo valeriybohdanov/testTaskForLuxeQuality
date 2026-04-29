@@ -20,11 +20,11 @@ test('TC8: Valid Checkout Process', async ({ page }) => {
     await inventoryPage.addToCartFirstItem();
     await expect(inventoryPage.cartLink).toHaveText('1');
     await inventoryPage.cartLink.click();
-    await expect(page).toHaveURL('https://www.saucedemo.com/cart.html');
+    await cartPage.assertUrl();
     const firstItemName = await inventoryPage.getFirstItemName();
     await expect(page.locator('[data-test="item-4-title-link"]')).toContainText(firstItemName);
     await cartPage.checkoutButton.click();
-    await expect(page).toHaveURL('https://www.saucedemo.com/checkout-step-one.html');
+    await checkoutPage.assertUrl();
     const user = userData();
     await checkoutPage.fillCheckoutInformation(user.firstName, user.lastName, user.postalCode);
     await expect(page).toHaveURL('https://www.saucedemo.com/checkout-step-two.html');
@@ -46,10 +46,11 @@ test('TC9: Checkout without products', async ({ page }) => {
     await loginPage.navigate();   
     await loginPage.login(credentials.username, credentials.password);
     await inventoryPage.cartLink.click();
-    await expect(page).toHaveURL('https://www.saucedemo.com/cart.html');
+    await cartPage.assertUrl();
     await expect(page.locator('.cart_item')).not.toBeVisible();
     await cartPage.checkoutButton.click();
-    await expect(page).toHaveURL('https://www.saucedemo.com/cart.html');
+    await cartPage.assertUrl();
     await expect(cartPage).toContainText('Cart is empty');
 });    
+
     
