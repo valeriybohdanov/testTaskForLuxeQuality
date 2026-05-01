@@ -7,12 +7,11 @@ export class InventoryPage {
         this.linkedinLink = page.locator('[data-test="social-linkedin"]');
         this.burgerMenuButton = page.locator('#react-burger-menu-btn');
         this.logoutLink = page.locator('#logout_sidebar_link');
-        this.addButton = page.locator('.btn.btn_primary.btn_small.btn_inventory ')
+        this.addButton = page.locator('.btn.btn_primary.btn_small.btn_inventory')
         this.cartLink = page.locator('[data-test="shopping-cart-link"]')
         this.sortDropdown = page.locator('.product_sort_container');
         this.url = 'https://www.saucedemo.com/inventory.html';
-
-
+        this.menuItems = page.locator('.bm-item');
     }
     async navigate() {
       await test.step('Navigate to Inventory page', async() => {  
@@ -45,4 +44,31 @@ export class InventoryPage {
         await this.sortDropdown.selectOption(option);
       });
     };
+    async getItemNames() {
+      return await test.step('Get names of all items from products list', async() => {
+        return await this.page.locator('[data-test="inventory-item-name"]').allTextContents();
+      });
+    }
+    async getItemPrices() {
+      return await test.step('Get prices of all items from products list', async() => {
+        return await this.page.locator('[data-test="inventory-item-price"]').allTextContents();
+      });
+    };
+    async getNumericPrices() {
+      return await test.step('Get numeric prices of all items from products list', async() => {
+        const prices = await this.getItemPrices();
+        return prices.map(p => parseFloat(p.replace('$', '')));
+      });
+    }
+    async openSocialLink(link, expectedUrl) {
+      await test.step(`Open ${link} social link and verify URL`, async() => {
+        const [newPage] = await Promise.all([
+          this.page.context().waitForEvent('page'),
+          this[`${link}Link`].click()
+        ]);
+        await newPage.waitForLoadState();
+        await expect(newPage).toHaveURL(expectedUrl);
+        await newPage.close();
+      });
+    }
   }    

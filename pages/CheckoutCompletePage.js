@@ -1,5 +1,4 @@
-import { expect } from '@playwright/test';
-import test from 'node:test';
+import { expect, test } from '@playwright/test';
 export class CheckoutCompletePage {
     constructor(page) {
         this.page = page;

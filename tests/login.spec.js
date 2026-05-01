@@ -1,18 +1,13 @@
-import { test, expect } from '@playwright/test';
-import { LoginPage } from '../pages/LoginPage';
-import { InventoryPage } from '../pages/InventoryPage';
+import { test, expect } from '../fixtures';
 import { credentials } from '../testData';
 
-test('TC1: Valid Login', async ({ page }) => {
-    const loginPage = new LoginPage(page);
-    const inventoryPage = new InventoryPage(page);
+test('TC1: Valid Login', async ({ loginPage, inventoryPage }) => {
     await loginPage.navigate();
     await loginPage.login(credentials.username, credentials.password);
     await inventoryPage.assertUrl();
 });
 
-test('TC2: Login with Invalid Password', async ({ page }) => {
-    const loginPage = new LoginPage(page);
+test('TC2: Login with Invalid Password', async ({ loginPage }) => {
     await loginPage.navigate();
     await loginPage.login(credentials.username, credentials.invalidPassword);
     await expect(loginPage.errorMessage).toHaveText('Epic sadface: Username and password do not match any user in this service');
@@ -23,8 +18,7 @@ test('TC2: Login with Invalid Password', async ({ page }) => {
     await expect(loginPage.passwordInput).toHaveClass('input_error form_input error');
 });
 
-test('TC3: Login with locked out test login', async ({ page }) => {
-    const loginPage = new LoginPage(page);
+test('TC3: Login with locked out test login', async ({ loginPage }) => {
     await loginPage.navigate();
     await loginPage.login(credentials.lockedUsername, credentials.password);
     await expect(loginPage.errorMessage).toHaveText('Epic sadface: Sorry, this user has been locked out.');
@@ -35,15 +29,12 @@ test('TC3: Login with locked out test login', async ({ page }) => {
     await expect(loginPage.passwordInput).toHaveClass('input_error form_input error');
 });
 
-test('TC4: Logout', async ({ page }) => {
-    const loginPage = new LoginPage(page);
-    const inventoryPage = new InventoryPage(page);
+test('TC4: Logout', async ({ loginPage, inventoryPage }) => {
     await loginPage.navigate();
     await loginPage.login(credentials.username, credentials.password);
     await inventoryPage.assertUrl();
     await inventoryPage.burgerMenuButton.click();
-    const menuItems = page.locator('.bm-item');
-    await expect(menuItems).toHaveCount(4);
+    await expect(inventoryPage.menuItems).toHaveCount(4);
     await inventoryPage.logoutLink.click();
     await loginPage.assertUrl();
     await expect(loginPage.usernameInput).toBeEmpty();
