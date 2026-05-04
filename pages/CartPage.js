@@ -1,4 +1,5 @@
-import { expect, test } from '@playwright/test';
+import { expect } from '@playwright/test';
+
 export class CartPage {
     constructor(page) {
         this.page = page;
@@ -6,20 +7,27 @@ export class CartPage {
         this.url = 'https://www.saucedemo.com/cart.html';
         this.cartProductName = page.locator('[data-test="item-4-title-link"]');
         this.cartItem = page.locator('.cart_item');
+        this.cartList = page.locator('.cart_list'); 
     }
     async navigate() {
-      await test.step('Navigate to Cart page', async() => {
         await this.page.goto(this.url);
-      });
     }
     async assertUrl() {
-      await test.step('Verify URL is correct', async() => {
         await expect(this.page).toHaveURL(this.url);
-      });
     }
     async assertEmptyCartMessage() {
-      await test.step('Verify empty cart message', async() => {
-        await expect(this.page.locator('.cart_list')).toContainText('Cart is empty');
-      });
+        await expect(this.cartList).toContainText('Cart is empty'); 
     }
-  }
+    async assertProductName(name) {
+        await expect(this.cartProductName).toContainText(name);
+    }
+    async goToCheckout() {
+        await this.checkoutButton.click();
+    }
+    async assertTotalPrice(price) {
+        await expect(this.totalPrice).toContainText(price);
+    }
+    async assertCartEmpty() {
+        await expect(this.cartItem).not.toBeVisible();
+    }
+}
